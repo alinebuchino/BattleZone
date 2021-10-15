@@ -1,0 +1,346 @@
+package battlezone.view;
+
+import battlezone.controller.Conexao;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.ResultSet;
+import com.mysql.jdbc.Statement;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.net.URL;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author Aline Buchino
+ */
+public class Login extends javax.swing.JFrame {
+    
+    SplashScreen inicio;
+    
+    public Login() {
+        initComponents();
+
+    }
+    
+    public Login(SplashScreen inicio){
+        this.inicio = inicio;
+        setProgress(0, "Carregando componentes do sistema");
+        initComponents(); 
+        setProgress(20, "Conectando ao Banco de Dados");
+        setProgress(40, "Carregando módulos");
+        setProgress(60, "Carregamento de módulos concluído");
+        setProgress(80, "Carregando interfaces");
+        setProgress(90, "Interface carregada");
+        setProgress(100, "Bem vindo ao Sistema!");
+    }
+    
+    void setProgress(int percent, String informacao){
+        inicio.getJLabel().setText(informacao);
+        inicio.getJProgressBar().setValue(percent);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            JOptionPane.showMessageDialog(this, "Não foi possível carregar a inicialização");
+        }
+    }
+    
+    // INICIANDO A CONEXÃO
+    
+    Conexao con = new Conexao();
+    Connection cn = con.conexao();
+
+    public void Logar(String id, String senha){
+       String dado = null;
+        try {
+            String sql = "SELECT nome_us FROM usuario WHERE nome_us = '" +id+ "' ";
+            Statement st = (Statement) cn.createStatement();
+            ResultSet rs = (ResultSet) st.executeQuery(sql);
+            
+            if(rs.first()){
+                String sql1 = "SELECT senha FROM usuario WHERE senha = '" +senha+ "' " ;
+                Statement st1 = (Statement) cn.createStatement();
+                ResultSet rs1 = (ResultSet) st1.executeQuery(sql1);
+                
+                if(rs1.first()){
+                    String sql2 = "SELECT tipo_us FROM usuario WHERE nome_us = '" +id+ "' " 
+                            + "and senha = '" +senha+ "' ";
+                    Statement st2 = (Statement) cn.createStatement();
+                    ResultSet rs2 = (ResultSet) st2.executeQuery(sql2);
+                    
+                    while(rs2.next()){
+                        dado = rs2.getString(1);
+                    }
+                    
+                    if(dado.equals("ADMINISTRADOR")){
+                        String sql3 = "SELECT nome_us FROM usuario WHERE nome_us = '" +id+ "' ";
+                        Statement st3 = (Statement) cn.createStatement();
+                        ResultSet rs3 = (ResultSet) st3.executeQuery(sql3);
+                        
+                       while(rs3.next()){
+                        dado = rs3.getString(1);
+                         }           
+                       
+                       dispose();
+                       MenuPrincipal menu = new MenuPrincipal();
+                       JOptionPane.showMessageDialog(this, "Bem vindo ao sistema " + dado, "Administrador", 0);
+                       
+                       menu.userConect.setText(dado);
+                       menu.setVisible(true);
+                       
+                    }else{
+                        String sql4 = "SELECT nome_us FROM usuario WHERE nome_us = '" +id+ "' ";
+                        Statement st4 = (Statement) cn.createStatement();
+                        ResultSet rs4  = (ResultSet) st4.executeQuery(sql4);
+                        
+                       while(rs4.next()){
+                        dado = rs4.getString(1);
+                         }           
+                       
+                       dispose();
+                       MenuPrincipalF menuF = new MenuPrincipalF();
+                       JOptionPane.showMessageDialog(this, "Bem vindo ao sistema " + dado, "Funcionário", 0);
+                       
+                       menuF.userConect.setText(dado);
+                       menuF.setVisible(true);
+                    }
+                    
+                }else{
+                JOptionPane.showMessageDialog(this, "Senha incorreta!", "Login", 0,
+                new ImageIcon (getClass().getResource("/imagens/principal/info.png")));
+            }
+                
+            }else{
+                JOptionPane.showMessageDialog(this, "Usuário inexistente!", "Login", 0,
+                new ImageIcon (getClass().getResource("/imagens/principal/info.png")));
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Não foi possível acessar o sistema");
+        }
+    }
+    
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        usuario = new app.bolivia.swing.JCTextField();
+        senha = new jpass.JRPasswordField();
+        jLabel3 = new javax.swing.JLabel();
+        Label_us = new javax.swing.JLabel();
+        Label_senha = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnEntrar = new javax.swing.JButton();
+        btnSair = new javax.swing.JButton();
+        painelLogin = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login");
+        setPreferredSize(new java.awt.Dimension(410, 300));
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setOpaque(false);
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        usuario.setBackground(new java.awt.Color(12, 180, 57));
+        usuario.setBorder(null);
+        usuario.setForeground(new java.awt.Color(255, 255, 255));
+        usuario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        usuario.setName("txtUsuario"); // NOI18N
+        usuario.setOpaque(false);
+        usuario.setPhColor(new java.awt.Color(255, 255, 255));
+        usuario.setPlaceholder("USUARIO");
+        usuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                usuarioKeyReleased(evt);
+            }
+        });
+        jPanel1.add(usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 40, 80, 20));
+
+        senha.setBackground(new java.awt.Color(12, 180, 57));
+        senha.setBorder(null);
+        senha.setForeground(new java.awt.Color(255, 255, 255));
+        senha.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        senha.setName("txtSenha"); // NOI18N
+        senha.setOpaque(false);
+        senha.setPhColor(new java.awt.Color(255, 255, 255));
+        senha.setPlaceholder("SENHA");
+        senha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                senhaKeyPressed(evt);
+            }
+        });
+        jPanel1.add(senha, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 60, 20));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/principal/user.png"))); // NOI18N
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, 102));
+
+        Label_us.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/principal/campoLoginUs.png"))); // NOI18N
+        jPanel1.add(Label_us, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 40, -1, -1));
+
+        Label_senha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/principal/campoLoginPass.png"))); // NOI18N
+        jPanel1.add(Label_senha, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, 130, -1));
+
+        jPanel2.setOpaque(false);
+        jPanel2.setPreferredSize(new java.awt.Dimension(390, 60));
+        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 20, 5));
+
+        btnEntrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/principal/entrar.png"))); // NOI18N
+        btnEntrar.setBorder(null);
+        btnEntrar.setBorderPainted(false);
+        btnEntrar.setContentAreaFilled(false);
+        btnEntrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEntrar.setMargin(new java.awt.Insets(2, 30, 2, 14));
+        btnEntrar.setPreferredSize(new java.awt.Dimension(130, 35));
+        btnEntrar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/principal/entrar2.png"))); // NOI18N
+        btnEntrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntrarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnEntrar);
+
+        btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/principal/logout.png"))); // NOI18N
+        btnSair.setBorder(null);
+        btnSair.setBorderPainted(false);
+        btnSair.setContentAreaFilled(false);
+        btnSair.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSair.setMargin(new java.awt.Insets(2, 25, 2, 14));
+        btnSair.setPreferredSize(new java.awt.Dimension(130, 35));
+        btnSair.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/principal/logout2.png"))); // NOI18N
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSairActionPerformed(evt);
+            }
+        });
+        btnSair.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnSairKeyPressed(evt);
+            }
+        });
+        jPanel2.add(btnSair);
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 350, 60));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 340, 230));
+
+        painelLogin.setPreferredSize(new java.awt.Dimension(410, 475));
+        painelLogin.setLayout(new java.awt.GridLayout(1, 0));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/principal/imagemlogin.png"))); // NOI18N
+        jLabel2.setText("jLabel2");
+        jLabel2.setPreferredSize(new java.awt.Dimension(438, 270));
+        painelLogin.add(jLabel2);
+
+        getContentPane().add(painelLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 270));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
+       String us = usuario.getText();
+       String pass = senha.getText();
+       if(us.equals("") || pass.equals("")){
+           JOptionPane.showMessageDialog(this, "Preencha os campos para acessar o sistema!", "Login", 0,
+           new ImageIcon (getClass().getResource("/imagens/principal/info.png")));
+           
+       }else{
+           Logar(us, pass);
+       }
+    }//GEN-LAST:event_btnEntrarActionPerformed
+
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+       this.dispose();
+    }//GEN-LAST:event_btnSairActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        URL caminhoIcone = getClass().getResource("/imagens/principal/LogoSemBorda.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(caminhoIcone);
+        this.setIconImage(iconeTitulo);
+    }//GEN-LAST:event_formWindowActivated
+
+    private void btnSairKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnSairKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+	    btnSair.requestFocus();
+            btnSair.doClick();
+	}
+    }//GEN-LAST:event_btnSairKeyPressed
+
+    private void senhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaKeyPressed
+         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+	    btnEntrar.requestFocus();
+            btnEntrar.doClick();
+	}
+    }//GEN-LAST:event_senhaKeyPressed
+
+    private void usuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usuarioKeyReleased
+        usuario.setText(usuario.getText().toUpperCase()); // deixar tudo maiusculo
+    }//GEN-LAST:event_usuarioKeyReleased
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                Login tela = new Login();
+                tela.setLocationRelativeTo(null);
+                tela.setVisible(true);
+               
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Label_senha;
+    private javax.swing.JLabel Label_us;
+    private javax.swing.JButton btnEntrar;
+    private javax.swing.JButton btnSair;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel painelLogin;
+    private jpass.JRPasswordField senha;
+    private app.bolivia.swing.JCTextField usuario;
+    // End of variables declaration//GEN-END:variables
+
+}
